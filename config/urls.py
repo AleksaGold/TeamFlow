@@ -1,9 +1,8 @@
-
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     path("user/", include("users.urls", namespace="user")),
     path("evaluation/", include("evaluations.urls", namespace="evaluation")),
     path("meeting/", include("meetings.urls", namespace="meeting")),
