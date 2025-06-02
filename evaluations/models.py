@@ -35,6 +35,10 @@ class Evaluation(models.Model):
         verbose_name = "Оценка"
         verbose_name_plural = "Оценки"
 
+        constraints = [
+            models.UniqueConstraint(fields=["task"], name="unique_evaluation_per_task")
+        ]
+
     def __str__(self):
         """Возвращает строковое представление объекта."""
         return f"Оценка от {self.author} - {self.score} за задачу {self.task}"
