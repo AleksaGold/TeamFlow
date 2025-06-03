@@ -47,3 +47,12 @@ class EvaluationDestroyAPIView(DestroyAPIView):
     """Представление для удаления объекта модели Evaluation."""
 
     queryset = Evaluation.objects.all()
+
+
+class UserEvaluationsAPIView(ListAPIView):
+    """Представление для получения списка оценок конкретного пользователя."""
+    serializer_class = EvaluationSerializer
+
+    def get_queryset(self):
+        """Получает список оценок текущего пользователя."""
+        return Evaluation.objects.filter(task__task_performer=self.request.user)

@@ -4,7 +4,7 @@ from evaluations.apps import EvaluationsConfig
 from evaluations.views import (EvaluationCreateAPIView,
                                EvaluationDestroyAPIView, EvaluationListAPIView,
                                EvaluationRetrieveAPIView,
-                               EvaluationUpdateAPIView)
+                               EvaluationUpdateAPIView, UserEvaluationsAPIView)
 
 app_name = EvaluationsConfig.name
 
@@ -33,5 +33,10 @@ urlpatterns = [
         "destroy/<int:pk>/",
         EvaluationDestroyAPIView.as_view(),
         name="destroy_evaluation",
+    ),
+    path(
+        "user-evaluations/",
+        UserEvaluationsAPIView.as_view(),
+        name="user_evaluations",
     ),
 ]
