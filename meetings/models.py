@@ -11,8 +11,8 @@ class Meeting(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название встречи")
     description = models.TextField(verbose_name="Описание встречи", **NULLABLE)
     date = models.DateField(verbose_name="Дата встречи")
-    start_time = models.TimeField(verbose_name="Время начала встречи")
-    end_time = models.TimeField(verbose_name="Время окончания встречи")
+    start_time = models.TimeField(db_index=True, verbose_name="Время начала встречи")
+    end_time = models.TimeField(db_index=True, verbose_name="Время окончания встречи")
     organizer = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
