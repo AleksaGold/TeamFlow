@@ -18,3 +18,16 @@ class UserSerializer(ModelSerializer):
             "is_active",
             "password",
         )
+
+
+class MemberSerializer(ModelSerializer):
+    """Сериализатор для использования модели User для вывода участников команды."""
+
+    class Meta:
+        model = User
+        fields = (
+            "id",
+            "email",
+            "role",
+            "is_active",
+        )

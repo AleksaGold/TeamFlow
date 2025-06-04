@@ -51,6 +51,7 @@ class EvaluationDestroyAPIView(DestroyAPIView):
 
 class UserEvaluationsAPIView(ListAPIView):
     """Представление для получения списка оценок конкретного пользователя."""
+
     serializer_class = EvaluationSerializer
 
     def get_queryset(self):
