@@ -14,9 +14,7 @@ class MeetingSerializer(ModelSerializer):
 
         # Время начала не может быть позже времени окончания
 
-        if (
-            data["start_time"] > data["end_time"]
-        ):
+        if data["start_time"] > data["end_time"]:
             raise ValidationError(
                 "Время начала встречи не может быть позже времени окончания."
             )

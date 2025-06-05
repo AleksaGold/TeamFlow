@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "tasks",
     "teams",
     "users",
+    "calendars",
 ]
 
 MIDDLEWARE = [
