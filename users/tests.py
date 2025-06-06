@@ -24,6 +24,7 @@ class UserTestCase(APITestCase):
             "email": "admin@test.test",
             "role": "admin",
         }
+
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), 3)
@@ -34,6 +35,7 @@ class UserTestCase(APITestCase):
         data = {"email": "user@update.test"}
         response = self.client.patch(url, data)
         data = response.json()
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data.get("email"), "user@update.test")
 
@@ -42,6 +44,7 @@ class UserTestCase(APITestCase):
         url = reverse("user:update_user", args=(self.manager_role.pk,))
         data = {"email": "manager@update.test"}
         response = self.client.patch(url, data)
+
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(self.manager_role.email, "manager@test.test")
 
@@ -49,6 +52,7 @@ class UserTestCase(APITestCase):
         """Тестирование удаления пользователя."""
         url = reverse("user:delete_user", args=(self.user_role.pk,))
         response = self.client.delete(url)
+
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(User.objects.count(), 1)
 
@@ -56,6 +60,7 @@ class UserTestCase(APITestCase):
         """Тестирование прав доступа к удалению пользователя."""
         url = reverse("user:delete_user", args=(self.manager_role.pk,))
         response = self.client.delete(url)
+
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(User.objects.count(), 2)
 
