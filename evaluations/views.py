@@ -3,15 +3,18 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      UpdateAPIView)
+from rest_framework.permissions import IsAuthenticated
 
 from evaluations.models import Evaluation
 from evaluations.serializers import EvaluationSerializer
+from users.permissions import IsManagerPermission
 
 
 class EvaluationCreateAPIView(CreateAPIView):
     """Представление для создания объекта модели Evaluation."""
 
     serializer_class = EvaluationSerializer
+    permission_classes = (IsAuthenticated & IsManagerPermission,)
 
     def perform_create(self, serializer):
         """Переопределение метода для автоматической привязки владельца к создаваемому объекту
@@ -41,12 +44,14 @@ class EvaluationUpdateAPIView(UpdateAPIView):
 
     queryset = Evaluation.objects.all()
     serializer_class = EvaluationSerializer
+    permission_classes = (IsAuthenticated & IsManagerPermission,)
 
 
 class EvaluationDestroyAPIView(DestroyAPIView):
     """Представление для удаления объекта модели Evaluation."""
 
     queryset = Evaluation.objects.all()
+    permission_classes = (IsAuthenticated & IsManagerPermission,)
 
 
 class UserEvaluationsAPIView(ListAPIView):

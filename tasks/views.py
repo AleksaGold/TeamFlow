@@ -1,16 +1,19 @@
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      UpdateAPIView)
+from rest_framework.permissions import IsAuthenticated
 
 from tasks.models import Comment, Task
 from tasks.serializers import (CommentSerializer, TaskDetailSerializer,
                                TaskSerializer)
+from users.permissions import IsManagerPermission
 
 
 class TaskCreateAPIView(CreateAPIView):
     """Представление для создания объекта модели Task."""
 
     serializer_class = TaskSerializer
+    permission_classes = (IsAuthenticated & IsManagerPermission,)
 
     def perform_create(self, serializer):
         """Переопределение метода для автоматической привязки автора к создаваемой задаче."""
@@ -36,12 +39,14 @@ class TaskUpdateAPIView(UpdateAPIView):
 
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
+    permission_classes = (IsAuthenticated & IsManagerPermission,)
 
 
 class TaskDestroyAPIView(DestroyAPIView):
     """Представление для удаления объекта модели Task."""
 
     queryset = Task.objects.all()
+    permission_classes = (IsAuthenticated & IsManagerPermission,)
 
 
 class CommentCreateAPIView(CreateAPIView):

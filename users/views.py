@@ -3,11 +3,12 @@ from django.utils.dateparse import parse_date
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      UpdateAPIView)
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
 from evaluations.models import Evaluation
 from users.models import User
+from users.permissions import IsOwnerPermission
 from users.serializers import UserSerializer
 
 
@@ -36,12 +37,14 @@ class UserUpdateAPIView(UpdateAPIView):
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated & IsAdminUser | IsOwnerPermission,)
 
 
 class UserDeleteAPIView(DestroyAPIView):
     """Представление для удаления объекта модели User."""
 
     queryset = User.objects.all()
+    permission_classes = (IsAuthenticated & IsAdminUser | IsOwnerPermission,)
 
 
 class UserAverageScoreView(RetrieveAPIView):
