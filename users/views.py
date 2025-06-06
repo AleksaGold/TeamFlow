@@ -3,6 +3,7 @@ from django.utils.dateparse import parse_date
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      UpdateAPIView)
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from evaluations.models import Evaluation
@@ -14,6 +15,7 @@ class UserCreateAPIView(CreateAPIView):
     """Представление для создания нового объекта модели User."""
 
     serializer_class = UserSerializer
+    permission_classes = (AllowAny,)
 
     def perform_create(self, serializer):
         """Сохраняет сериализованные данные при регистрации пользователя и хэширует пароль."""

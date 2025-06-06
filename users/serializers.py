@@ -16,7 +16,6 @@ class UserSerializer(ModelSerializer):
             "role",
             "is_superuser",
             "is_active",
-            "password",
         )
 
 
