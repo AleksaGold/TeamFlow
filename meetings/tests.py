@@ -1,7 +1,4 @@
-import datetime
-
 from django.urls import reverse
-from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
@@ -108,7 +105,6 @@ class MeetingTestCase(APITestCase):
         data = {"start_time": "18:00:00", "end_time": "18:30:00"}
 
         response = self.client.patch(url, data)
-        data = response.json()
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(self.meeting.start_time, "10:00:00")
 

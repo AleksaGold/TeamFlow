@@ -76,7 +76,6 @@ class EvaluationTestCase(APITestCase):
         self.assertEqual(Evaluation.objects.count(), 2)
 
         response = self.client_2.post(url, data)
-        print(response)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Evaluation.objects.count(), 3)
 
