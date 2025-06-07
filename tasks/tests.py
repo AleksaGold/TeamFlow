@@ -1,6 +1,5 @@
-from datetime import datetime
-
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 
@@ -76,7 +75,6 @@ class TaskTestCase(APITestCase):
         data = {"status": "completed"}
 
         response = self.client_1.patch(url, data)
-
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(self.task_1.status, "open")
 
@@ -128,7 +126,7 @@ class CommentTestCase(APITestCase):
             task_performer=self.user_role,
         )
         self.comment = Comment.objects.create(
-            text="Test comment", task=self.task, created_at=datetime.now()
+            text="Test comment", task=self.task, created_at=timezone.now()
         )
 
     def test_comment_create(self):
@@ -137,7 +135,7 @@ class CommentTestCase(APITestCase):
         data = {
             "text": "New comment",
             "task": self.task.pk,
-            "created_at": datetime.now(),
+            "created_at": timezone.now(),
         }
 
         response = self.client.post(url, data)

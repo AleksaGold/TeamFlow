@@ -1,7 +1,10 @@
 from django.urls import reverse
+from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from evaluations.models import Evaluation
+from tasks.models import Task
 from users.models import User
 
 
@@ -92,3 +95,62 @@ class UserTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data, result)
         self.assertEqual(len(data), 2)
+
+
+class UserAverageScoreTestCase(APITestCase):
+    """Тесты для модели получения средней оценки пользователя."""
+
+    def setUp(self):
+        """Окружение для тестов."""
+        self.user = User.objects.create(email="user@test.test", role="user")
+        self.manager = User.objects.create(email="manager@test.test", role="manager")
+
+        self.task_1 = Task.objects.create(
+            title="Manager task",
+            description="Some description",
+            status="open",
+            deadline="2025-08-06",
+            author=self.manager,
+            task_performer=self.manager,
+        )
+        self.task_2 = Task.objects.create(
+            title="User task",
+            description="Some description",
+            status="in-progress",
+            deadline="2025-06-05",
+            author=self.manager,
+            task_performer=self.user,
+        )
+        self.task_3 = Task.objects.create(
+            title="User task_2 ",
+            description="Some description",
+            status="in-progress",
+            deadline="2025-07-06",
+            author=self.manager,
+            task_performer=self.user,
+        )
+        self.evaluation_1 = Evaluation.objects.create(
+            task=self.task_1, author=self.manager, score=2, created_at=timezone.now()
+        )
+        self.evaluation_2 = Evaluation.objects.create(
+            task=self.task_2, author=self.manager, score=3, created_at=timezone.now()
+        )
+        self.evaluation_3 = Evaluation.objects.create(
+            task=self.task_3, author=self.manager, score=5, created_at=timezone.now()
+        )
+
+        self.client.force_authenticate(user=self.user)
+
+    def test_user_average_score_retrieve(self):
+        """Тестирование просмотра средней оценки пользователя."""
+        url = reverse("user:user_average_score", args=(self.user.pk,))
+        start_date = timezone.now() - timezone.timedelta(days=1)
+        end_date = timezone.now() + timezone.timedelta(days=1)
+        response = self.client.get(
+            url,
+            {"start": start_date, "end": end_date},
+        )
+        data = response.json()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data.get("average_score"), 4)
