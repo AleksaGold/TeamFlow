@@ -82,4 +82,4 @@ class CalendarAPIView(APIView):
                 }
 
             return Response({"month": month_str, "calendar": result})
-        return Response({"error": "Введены неверные параметры"}, status=400)
+        return Response({"error": "Введены неверные параметры."}, status=400)
