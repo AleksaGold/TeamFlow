@@ -34,7 +34,7 @@ urlpatterns = [
         name="destroy_meeting",
     ),
     path(
-        "user-meetings/",
+        "user-meetings/<int:pk>/",
         UserMeetingsAPIView.as_view(),
         name="user_meetings",
     ),
