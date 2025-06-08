@@ -1,5 +1,4 @@
-from rest_framework.serializers import (ModelSerializer, StringRelatedField,
-                                        ValidationError)
+from rest_framework.serializers import ModelSerializer, StringRelatedField
 
 from evaluations.models import Evaluation
 
