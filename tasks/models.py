@@ -15,7 +15,7 @@ class Task(models.Model):
     ]
 
     title = models.CharField(max_length=100, verbose_name="Название задачи")
-    description = models.TextField(verbose_name="Описание задачи")
+    description = models.TextField(max_length=1500, verbose_name="Описание задачи")
     status = models.CharField(
         max_length=20, choices=STATUSES, verbose_name="Статус задачи", default="open"
     )
@@ -25,7 +25,6 @@ class Task(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Пользователь, который создал задачу",
         related_name="created_tasks",
-        **NULLABLE,
     )
     task_performer = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -53,7 +52,6 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Автор комментария",
         related_name="comments",
-        **NULLABLE,
     )
     task = models.ForeignKey(
         "tasks.Task",
@@ -61,7 +59,9 @@ class Comment(models.Model):
         verbose_name="Задача, к которой относится комментарий",
         related_name="comments",
     )
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    created_at = models.DateTimeField(
+        db_index=True, auto_now_add=True, verbose_name="Дата создания"
+    )
 
     class Meta:
         verbose_name = "Комментарий"

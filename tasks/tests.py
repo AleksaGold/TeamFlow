@@ -49,6 +49,7 @@ class TaskTestCase(APITestCase):
             "status": "open",
             "deadline": "2025-07-06",
             "task_performer": self.user_role.pk,
+            "author": self.manager_role.pk,
         }
 
         response = self.client_1.post(url, data)
@@ -111,9 +112,6 @@ class CommentTestCase(APITestCase):
     def setUp(self):
         """Окружение для тестов."""
         self.user_role = User.objects.create(email="user@test.test", role="user")
-        self.manager_role = User.objects.create(
-            email="manager@test.test", role="manager"
-        )
 
         self.client.force_authenticate(user=self.user_role)
 
@@ -122,11 +120,14 @@ class CommentTestCase(APITestCase):
             description="Test description",
             status="open",
             deadline="2025-06-06",
-            author=self.manager_role,
+            author=self.user_role,
             task_performer=self.user_role,
         )
         self.comment = Comment.objects.create(
-            text="Test comment", task=self.task, created_at=timezone.now()
+            text="Test comment",
+            task=self.task,
+            created_at=timezone.now(),
+            author=self.user_role,
         )
 
     def test_comment_create(self):
@@ -136,6 +137,7 @@ class CommentTestCase(APITestCase):
             "text": "New comment",
             "task": self.task.pk,
             "created_at": timezone.now(),
+            "author": self.user_role.pk,
         }
 
         response = self.client.post(url, data)

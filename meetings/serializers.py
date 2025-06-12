@@ -14,7 +14,7 @@ class MeetingSerializer(ModelSerializer):
 
         # Время начала не может быть позже времени окончания
 
-        if data["start_time"] > data["end_time"]:
+        if data["start_time"] >= data["end_time"]:
             raise ValidationError(
                 "Время начала встречи не может быть позже времени окончания."
             )
@@ -24,7 +24,9 @@ class MeetingSerializer(ModelSerializer):
         start_time = data.get("start_time") or getattr(
             self.instance, "start_time", None
         )
-        end_time = data.get("end_time") or getattr(self.instance, "end_time", None)
+        end_time = data.get("end_time")
+        if end_time is None:
+            end_time = getattr(self.instance, "end_time", None)
         participants = data.get("participants") or getattr(
             self.instance, "participants", None
         )
@@ -35,7 +37,9 @@ class MeetingSerializer(ModelSerializer):
         if not all([date, start_time, end_time, participants]):
             return data
 
-        current_meeting_id = self.instance.id if self.instance else None
+        current_meeting_id = (
+            getattr(self.instance, "id", None) if self.instance else None
+        )
 
         overlapping_meetings = (
             Meeting.objects.filter(participants__in=participants, date=date)
@@ -43,7 +47,7 @@ class MeetingSerializer(ModelSerializer):
             .distinct()
         )
 
-        if current_meeting_id:
+        if current_meeting_id is not None:
             overlapping_meetings = overlapping_meetings.exclude(id=current_meeting_id)
 
         if overlapping_meetings.exists():
